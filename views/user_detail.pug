@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{item.first_name} #{item.family_name}
+  ul
+    li Email: #{item.email} 
+    li Date of Birth: #{item.date_of_birth_formatted}
+  div(style='margin-left:20px;margin-top:20px')
+
+  hr
+  p
+    a(href=item.url+'/delete') Delete Record

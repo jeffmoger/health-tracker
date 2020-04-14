@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+      
+      if section === 'exercise' 
+        div.form-group
+          label(for='exercise_type') Description:
+          input#exercise_type.form-control(type='text' placeholder='Biking' name='exercise_type' required='true')
+        div.form-group
+          label(for='minutes') Minutes:
+          input#minutes.form-control(type='text' placeholder='30' name='minutes' required='true')
+        div.form-group
+          label(for='calorie_burn') Calorie Burn:
+          input#calorie_burn.form-control(type='text' placeholder='300' name='calorie_burn' required='true')
+      
+      if section === 'nutrition' 
+        div.form-group
+          label(for='calories') Calories:
+          input#calories.form-control(type='text' placeholder='1600' name='calories' required='true')
+        div.form-group
+          label(for='protein') Protein:
+          input#protein.form-control(type='text' placeholder='90' name='protein' required='true')
+        div.form-group
+          label(for='carbs') Carbs:
+          input#carbs.form-control(type='text' placeholder='200' name='carbs' required='true')
+        div.form-group
+          label(for='fat') Fat:
+          input#fat.form-control(type='text' placeholder='60' name='fat' required='true')
+      
+      if section === 'sleep' 
+        div.form-group
+          label(for='hours') Hours:
+          input#sleep.form-control(type='text' placeholder='8' name='hours' required='true')
+      
+      if section === 'weight'
+        div.form-group
+          label(for='weight') Weight:
+          input#weight.form-control(type='text' placeholder='76' name='weight' required='true')
+        div.form-group
+          label(for='unit') Unit:
+            select#unit.form-control(name='unit' required='true')
+              option#unit.form-control(value='kg' selected) kg
+              option#unit.form-control(value='lb') lb
+   
+   
+      div.form-group
+        label(for='date_of_entry') Date:
+        input#date_of_entry.form-control(type='date' name='date_of_entry')
+      div.form-group
+        label(for='notes') Notes:
+        input#notes.form-control(type='textarea' name='notes')
+        input#userID.form-control(type='hidden' name='userID' value=userID)
+      button.btn.btn-primary(type='submit') Submit
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg

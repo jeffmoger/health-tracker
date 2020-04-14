@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1=title
+  ul
+    if section === 'exercise'
+      li #{item.date_formatted}
+      li Activity: #{item.exercise_type}
+      li Duration: #{item.minutes} minutes
+      li Calories burned: #{item.calorie_burn}
+    if section === 'nutrition'
+      li #{item.date_formatted}  
+      li Calories: #{item.calories}
+      li Protein: #{item.protein} g
+      li Carbs: #{item.carbs} g
+      li Fat: #{item.fat} g
+    if section === 'sleep'
+      li #{item.date_formatted}
+      li #{item.hours} hours
+    if section === 'weight'
+      li #{item.date_formatted}  
+      li #{item.weight}#{item.unit}
+    if item.notes
+      li #{item.notes}
+  div(style='margin-left:20px;margin-top:20px')
+
+  hr
+  p
+    a(href=item.url+'/edit') Edit 
+    | | 
+    a(href=item.url+'/delete') Delete

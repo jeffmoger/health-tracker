@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  ul
+  if view_list
+      each item in view_list
+        li
+          if section === 'exercise'
+            a(href=item.url) #{item.date_formatted} 
+            | #{item.exercise_type}: #{item.minutes} mins, #{item.calorie_burn} calories burned
+          if section === 'nutrition'
+            a(href=item.url) #{item.date_formatted} 
+            | - #{item.calories} calories (p:#{item.protein}, c:#{item.carbs}, f:#{item.fat})
+          if section === 'sleep'
+            a(href=item.url) #{item.date_formatted} 
+            | - #{item.hours} hours
+          if section === 'weight'
+            a(href=item.url) #{item.date_formatted} 
+            | - #{item.weight}#{item.unit}
+      else
+        li No data available. (1)
+  else
+    li No data available. (2)

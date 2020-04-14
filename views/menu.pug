@@ -1,0 +1,28 @@
+ul(class='sidebar-nav')
+              if !isAuthenticated
+                li
+                  a(href='/view/users/login') Login
+              else
+                li 
+                  a(href='/') Home
+                  hr
+                li 
+                  a(href='/view/weight') Weight
+                li 
+                  a(href='/view/sleep') Sleep
+                li 
+                  a(href='/view/exercise') Exercise
+                li 
+                  a(href='/view/nutrition') Nutrition
+                  hr        
+                li 
+                  a(href='/view/weight/create') Create Weight
+                li 
+                  a(href='/view/sleep/create') Create Sleep
+                li 
+                  a(href='/view/exercise/create') Create Exercise
+                li 
+                  a(href='/view/nutrition/create') Create Nutrition
+                  hr
+                li
+                  a(href='/view/users/logout') Logout

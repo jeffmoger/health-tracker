@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  if method === 'GET'
+    h1=title
+    form(method='POST' action='')
+        div.form-group
+        label(for='first_name') First Name:
+        input#first_name.form-control(type='text' placeholder='John' name='first_name' required='true')
+        div.form-group
+        label(for='family_name') Family Name:
+        input#family_name.form-control(type='text' placeholder='Smith' name='family_name' required='true')
+        div.form-group
+        label(for='email') Email:
+        input#email.form-control(type='text' placeholder='email@example.com' name='email' required='true')
+        div.form-group
+        label(for='password') Password:
+        input#password.form-control(type='password' placeholder='***********' name='password' required='true')
+        div.form-group
+        label(for='date_of_birth') Date of Birth:
+        input#date_of_entry.form-control(type='date' name='date_of_birth')
+        p
+        button.btn.btn-primary(type='submit') Submit
+  
+  if method === 'POST'
+    h1 Created
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg
