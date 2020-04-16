@@ -14,6 +14,7 @@ const verify = async (req, res, next) => {
       email: decrypt.email,
       first_name: decrypt.first_name,
     };
+    
     isAuthenticated = true;
     next();
   } catch (err) {

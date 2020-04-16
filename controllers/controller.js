@@ -5,7 +5,7 @@ const Exercise = models.exercise,
       Sleep = models.sleep,
       Weight = models.weight;
 
-//const { body, check } = require('express-validator');
+
 
 // determine if API or View
 const getSegment = path => {
@@ -104,11 +104,11 @@ exports.create_get = function(req, res, next) {
     res.render('view_form', { title: `Create ${capitalize(segment)} record`, section: segment, userID: req.user.id});
 };
 
+
 // Create form on POST.
-exports.create_post = function(req, res, next) {     
-    
+exports.create_post = function(req, res, next) {
     const getRequest = () => {
-        const segment = req.params.segment;
+        const segment = req.body.segment;
         const item = req.body;
 
         if (!item.date_of_entry) {

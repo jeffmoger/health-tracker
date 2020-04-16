@@ -3,7 +3,7 @@ const createError = require('http-errors'),
       express = require('express'),
       path = require('path'),
       logger = require('morgan'),
-      bodyParser = require('body-parser'),
+      //bodyParser = require('body-parser'),
       cookieParser = require('cookie-parser'),
       mongoose = require('mongoose');
 
@@ -33,8 +33,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(logger('dev'));
 
@@ -42,6 +42,7 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 //Use Routes
 app.use('/', indexRouter);
