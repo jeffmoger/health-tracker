@@ -4,7 +4,6 @@ block content
   h1=title
 
   form(method='POST' action='')
-      
       if section === 'exercise' 
         div.form-group
           label(for='exercise_type') Description:
@@ -56,6 +55,7 @@ block content
         label(for='notes') Notes:
         input#notes.form-control(type='textarea' name='notes' value=item.notes)
         input#userID.form-control(type='hidden' name='userID' value=item.userID)
+        input#segment.form-control(type='hidden' name='segment' value=section)
       button.btn.btn-primary(type='submit') Submit
   if errors 
     ul

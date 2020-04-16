@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index'),
       viewRouter = require('./routes/view');
       apiRouter = require('./routes/api');
 
+
 const app = express();
 mongoose.set('toJSON', { getters: true, virtuals: true, versionKey: false });
 mongoose.set('toObject', { getters: true, virtuals: true, versionKey: false });

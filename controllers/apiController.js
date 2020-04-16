@@ -108,17 +108,6 @@ exports.create_post = async function(req, res, next) {
 
         return newItem;
     }
-    
-    // #TODO: Add Validation
-    const validateRequest = async (newItem) => {
-        //validate some stuff
-
-        if (!newItem.item.date_of_entry) {
-            newItem.item.date_of_entry = newDate(0);
-        }
-
-        return newItem;
-    }
 
     const saveRequest = async (newItem) => {
 
@@ -133,7 +122,6 @@ exports.create_post = async function(req, res, next) {
     const returnSavedRequest = async () => {
         try {
             item = await getRequest()
-            item = await validateRequest(item);
             item = await saveRequest(item);
             res.json(item);
             console.log('done')
