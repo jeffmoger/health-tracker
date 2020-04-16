@@ -1,56 +1,57 @@
 const { body, validationResult } = require('express-validator');
 
-const validationRules = function(segment) {
-  switch(segment) {
-      case 'exercise':
-          return [
-              body('exercise_type', 'Describe your activity').isLength({ min: 1 }).escape(),
-              body('minutes').isNumeric().withMessage('Minutes must be a number'),
-              body('calorie_burn').isNumeric().withMessage('Calories Burned must be a number'),
-              body('notes').optional({ checkFalsy: true }).escape()
-          ]
-      case 'nutrition':
-          return [
-              body('calories').isNumeric().withMessage('Calories must be a number'),
-              body('protein').isNumeric().withMessage('Protein must be a number'),
-              body('carbs').isNumeric().withMessage('Carbs must be a number'),
-              body('fat').isNumeric().withMessage('Fat must be a number'),
-              body('notes').optional({ checkFalsy: true }).escape()
-          ]
-      case 'sleep':
-          return [
-              body('hours').isNumeric().withMessage('Hours must be a number'),
-              body('notes').optional({ checkFalsy: true }).escape()
-          ]
-      case 'weight':
-          return [
-              body('weight').isNumeric().withMessage('must be numeric'),
-              body('notes').optional({ checkFalsy: true }).escape()
-          ]
-      default:
-        break
-      }
-}
+const { allFields } = require('../controllers/validationMsg.js')
 
 const validate = (req, res, next) => {
- 
+  const interface = res.locals.interface;
+  const segment = res.locals.segment;
+  console.log(interface)
+
+  const fields = Object.entries(allFields[segment])
+
+  
   const errors = validationResult(req)
   if (errors.isEmpty()) {
     return next()
   }
   const extractedErrors = []
-  errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
 
-  //return res.status(422).json({
-  //  errors: extractedErrors,
-  //})
-  console.log(extractedErrors);
-  return res.render('view_form', { title: `Create ${req.body.segment} record`, section: req.body.segment, userID: req.user.id, errorObj: extractedErrors})
+  errors.array().map(err => extractedErrors.push({
+    [err.param]: err.msg }));
+    const errorList = []
+    for (i=0; i < extractedErrors.length; i++) {
+      errorItem = Object.keys(extractedErrors[i]);
+      for ( j=0; j < fields.length; j++ ) {
+        if ( errorItem[0] === fields[j][0] ) {
+          errorList.push(errorItem[0],fields[j][1])
+        }
+      }
+    }
+    if (errorList.length<1) {
+      console.log('Validation passed')
+      next()
+
+    } else {
+      console.log(errorList)
+      if (interface === 'api') {
+        return res.status(422).json({
+          errors: errorList,
+        })
+      } else {
+        return res.render('view_form', { title: `Create ${req.body.segment} record`, section: req.body.segment, userID: req.user.id, errorList: errorList})
+        
+      }
+    }
+
+
+
+
+  
+  
 
 
 }
 
 module.exports = {
-  validate,
-  validationRules
+  validate
 }
