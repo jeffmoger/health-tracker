@@ -142,6 +142,7 @@ exports.edit_post = function(req, res, next) {
     } else {
         item = req.body.item;
     }
+    
     const segment = req.params.segment;
     db = getDB(segment);
     const saveRequest = async () => {

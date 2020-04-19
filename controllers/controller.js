@@ -19,6 +19,15 @@ const newDate = (d) => {
     return date.setDate(date.getDate() + d);
 }
 
+//This ensures a time is included when using date picker.
+//Important because we're saving dates in UTC.
+const dateWithTime = date => {
+    timeNow = new Date().toTimeString();
+    return new Date(date + ' ' + timeNow);
+}
+
+
+
 //Capitalize section for titles
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -112,9 +121,11 @@ exports.create_post = function(req, res, next) {
         const item = req.body;
 
         if (!item.date_of_entry) {
-            item.date_of_entry = newDate(0);
+            item.date_of_entry = new Date(Date.now());
         }
-
+        if (item.date_of_entry.length === 10) {
+            item.date_of_entry = dateWithTime(item.date_of_entry);
+        }
 
         const newItem = {
             segment,
@@ -158,6 +169,16 @@ exports.edit_get = function(req, res, next) {
 // Edit form on POST.
 exports.edit_post = function(req, res, next) {       
     const segment = req.params.segment
+    console.log(req.body.date_of_entry);
+    if (!req.body.date_of_entry) {
+        req.body.date_of_entry = new Date(Date.now());
+    }
+    if (req.body.date_of_entry.length === 10) {
+        req.body.date_of_entry = dateWithTime(req.body.date_of_entry);
+    }
+    
+    console.log(req.body.date_of_entry);
+    
     const db = getDB(segment);
     const saveRequest = async () => {
         try {

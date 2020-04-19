@@ -11,6 +11,7 @@ const UsersSchema = new Schema(
   family_name: {type: String},
   date_of_birth: {type: Date},
   email: {type: String},
+  tz: {type: String},
   hash: {type: String},
   salt: {type: String},
   createdAt: Number,

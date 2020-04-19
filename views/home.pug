@@ -1,6 +1,60 @@
-extends layout
+extends main
 
 block content
   h1= title
-  p #[em Jeff's Health Log].
-
+  -const sections = Object.getOwnPropertyNames(data)
+  if data.exercise.length > 0
+      h3 Exercise
+        |  
+        a(href='view/exercise/create') +
+      each item in data.exercise
+        p=item.exercise_type
+          |  (#{item.minutes} minutes)
+        ul
+          li=item.calorie_burn
+            |  calories burned
+  if data.nutrition.length > 0
+      h3 Nutrition
+        |  
+        a(href='view/nutrition/create') +
+      each item in data.nutrition
+        p=item.calories
+          |  calories consumed
+        ul
+          li=item.protein
+            | g protein
+          li=item.carbs
+            | g carbs
+          li=item.fat
+            | g fat
+  if data.sleep.length > 0
+      h3 Sleep
+        |  
+        a(href='view/sleep/create') +
+      each item in data.sleep
+        p=item.hours
+          |  hours
+  if data.weight.length > 0
+      h3 Weight
+        |  
+        a(href='view/weight/create') +
+      each item in data.weight
+        p=item.weight
+          |  #{item.unit}
+  if sections.length === 0
+    h3 No data recorded today
+    
+  br
+  br
+  br
+  br
+  br
+  p Create new entry:
+    |
+    a(href='view/exercise/create') exercise  
+    | | 
+    a(href='/view/nutrition/create') nutrition  
+    | | 
+    a(href='/view/sleep/create') sleep  
+    | | 
+    a(href='/view/weight/create') weight  

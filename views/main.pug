@@ -9,11 +9,15 @@ html(lang='en')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div(class='container')
+    div(class='container-fluid')
       div(class='row')
-        div(class='col-sm-2')
-          block sidebar
-            include menu.pug
-                
-        div(class='col-sm-10')
+        div(class='col-sm-1')
+        div(class='col-sm-5')
+          block nav
+            include nav.pug
+        div(class='col-sm-1')
+      div(class='row')
+        div(class='col-sm-1')
+        div(class='col-sm-5')
           block content
+        div(class='col-sm-1')

@@ -114,7 +114,8 @@ exports.login_post = [
             expires: d,
           })
 
-          res.redirect('/view/users/'+user.id+'/settings');
+          //res.redirect('/view/users/'+user.id+'/settings');
+          res.redirect('/')
         
       }
       //return status(400).info;
