@@ -2,7 +2,6 @@ extends main
 
 block content
   h1= title
-  -const sections = Object.getOwnPropertyNames(data)
   if data.exercise.length > 0
       h3 Exercise
         |  
@@ -41,9 +40,7 @@ block content
       each item in data.weight
         p=item.weight
           |  #{item.unit}
-  if sections.length === 0
-    h3 No data recorded today
-    
+  
   br
   br
   br
