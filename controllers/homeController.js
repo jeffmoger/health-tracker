@@ -36,7 +36,6 @@ exports.home_get = function(req, res, next) {
     const dateRange = () => {
         let start
         let end
-
         if (!req.params.start) {
             start = moment().format('YYYY-MM-DD')
         }
@@ -45,7 +44,6 @@ exports.home_get = function(req, res, next) {
             end.add(1, 'days')
             end.format('YYYY-MM-DD')
         }
-        console.log(end)
         start = moment(start).toDate();
         end = moment(end).toDate();
         
