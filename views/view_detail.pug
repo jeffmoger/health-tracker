@@ -1,4 +1,4 @@
-extends layout
+extends main
 
 block content
   h1=title
@@ -22,10 +22,7 @@ block content
       li #{item.weight}#{item.unit}
     if item.notes
       li #{item.notes}
-  div(style='margin-left:20px;margin-top:20px')
-
-  hr
-  p
+  div(class='edit')
     a(href=item.url+'/edit') Edit 
     | | 
     a(href=item.url+'/delete') Delete

@@ -13,11 +13,22 @@ html(lang='en')
       div(class='row')
         div(class='col-sm-1')
         div(class='col-sm-5')
-          block nav
-            include nav.pug
+          div(class='nav')
+            block nav
+              include nav.pug
         div(class='col-sm-1')
       div(class='row')
         div(class='col-sm-1')
         div(class='col-sm-5')
-          block content
+          div(class='content')
+            block content
         div(class='col-sm-1')
+      div(class='row')
+        div(class='footer')
+          a(href='/view/exercise') exercise  
+          | | 
+          a(href='/view/nutrition') nutrition  
+          | | 
+          a(href='/view/sleep') sleep  
+          | | 
+          a(href='/view/weight') weight  

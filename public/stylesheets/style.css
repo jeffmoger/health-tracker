@@ -3,9 +3,65 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+div.content h1 {
+  font-size: 220%;
+}
+
 a {
   color: #00B7FF;
 }
 li {
   list-style-type: circle;
 }
+div.footer {
+  margin: auto;
+  margin-top: 30px;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  color: rgb(230, 229, 229);
+  font-size: 90%;
+}
+div.footer a {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+div.nav {
+  margin: auto;
+  width: 100%;
+  padding: 5px;
+  text-align: right;
+  color: rgb(230, 229, 229);
+  font-size: 90%;
+}
+div.nav a {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+div.content li {
+  line-height: 140%;
+ }
+
+div.content li a {
+ line-height: 180%;
+}
+
+div.content div.edit {
+  padding-left: 15px;
+  margin-top: 30px;
+  margin-bottom:30px;
+  color: rgb(230, 229, 229)
+ }
+
+ div.content div.edit a {
+  margin-left: 10px;
+  margin-right: 10px;
+ }
+ div.home-date {
+   text-align:center;
+ }
+ div.home-date p {
+   font-size: 90%;
+   color: #666666;
+ }

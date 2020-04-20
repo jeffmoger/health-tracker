@@ -27,6 +27,7 @@ exports.home_get = function(req, res, next) {
     }
 
     let resultList = {
+        date : [],
         exercise : [],
         nutrition : [],
         sleep : [],
@@ -46,7 +47,7 @@ exports.home_get = function(req, res, next) {
         }
         start = moment(start).toDate();
         end = moment(end).toDate();
-        
+
         return {
             start,
             end
@@ -55,10 +56,13 @@ exports.home_get = function(req, res, next) {
     
     async function fetchData(resultList) {
 
-        const date = dateRange()
+        resultList.date = dateRange();
         const filter = {
             userID: req.user.id,
-            date_of_entry: { $gt: date.start, $lt: date.end }
+            date_of_entry: {
+                $gt: resultList.date.start,
+                $lt: resultList.date.end
+            }
         }
         const exercise = await Exercise.find(filter).exec()
         const nutrition = await Nutrition.find(filter).exec()
@@ -109,7 +113,7 @@ exports.home_get = function(req, res, next) {
         try {
             await fetchData(resultList);
             //res.json(resultList)
-            res.render('home', { title: 'Health & Fitness Log', data: resultList});
+            res.render('home', { title: 'Health & Fitness', data: resultList, date: moment(resultList.date.start).format('MMMM Do YYYY')});
         } catch (err) {
             console.log(err)
         };       

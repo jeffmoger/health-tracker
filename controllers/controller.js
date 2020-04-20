@@ -56,7 +56,7 @@ exports.view_list = function(req, res, next) {
     .sort([['date_of_entry', 'desc']])
     .exec(function (err, result) {
         if (err) throw err;
-        res.render('view_list', { title: `${capitalize(segment)} Entries:`, view_list: result, section: `${segment}`});
+        res.render('view_list', { title: `${capitalize(segment)}`, view_list: result, section: `${segment}`});
       });
   };
 
@@ -82,7 +82,7 @@ exports.view_delete_get = (req, res, next) => {
     db.findById(req.params.id)
       .exec(function (err, result) {
         if (err) { return next(err); }
-        res.render('view_delete', { title: `Delete ${capitalize(segment)} Entry:`, item: result, section: `${segment}`});
+        res.render('view_delete', { title: `Delete Entry:`, item: result, section: `${segment}`});
       });
   };
 
@@ -110,7 +110,7 @@ exports.view_delete_post = function(req, res, next) {
 // Create form on GET.
 exports.create_get = function(req, res, next) {       
     segment = req.params.segment
-    res.render('view_form', { title: `Create ${capitalize(segment)} record`, section: segment, userID: req.user.id});
+    res.render('view_form', { title: `${capitalize(segment)}`, section: segment, userID: req.user.id});
 };
 
 

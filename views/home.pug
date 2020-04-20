@@ -2,10 +2,12 @@ extends main
 
 block content
   h1= title
+  div(class='home-date')
+    p=date
   if data.exercise.length > 0
       h3 Exercise
         |  
-        a(href='view/exercise/create') +
+        a(href='/view/exercise/create') +
       each item in data.exercise
         p=item.exercise_type
           |  (#{item.minutes} minutes)
@@ -15,7 +17,7 @@ block content
   if data.nutrition.length > 0
       h3 Nutrition
         |  
-        a(href='view/nutrition/create') +
+        a(href='/view/nutrition/create') +
       each item in data.nutrition
         p=item.calories
           |  calories consumed
@@ -29,29 +31,14 @@ block content
   if data.sleep.length > 0
       h3 Sleep
         |  
-        a(href='view/sleep/create') +
+        a(href='/view/sleep/create') +
       each item in data.sleep
         p=item.hours
           |  hours
   if data.weight.length > 0
       h3 Weight
         |  
-        a(href='view/weight/create') +
+        a(href='/view/weight/create') +
       each item in data.weight
         p=item.weight
           |  #{item.unit}
-  
-  br
-  br
-  br
-  br
-  br
-  p Create new: 
-    | 
-    a(href='view/exercise/create') exercise  
-    | | 
-    a(href='/view/nutrition/create') nutrition  
-    | | 
-    a(href='/view/sleep/create') sleep  
-    | | 
-    a(href='/view/weight/create') weight  
