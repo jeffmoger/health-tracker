@@ -7,9 +7,11 @@ const Exercise = models.exercise,
       Weight = models.weight;
 
 
+
+
 // Home Controller on GET.
-exports.home_get = function(req, res, next) {    
-    
+exports.home_get = function(req, res, next) {
+
     //Calculate number of days between two dates, and generate an array of date
     const dateArray = (start, end) => {
         const date = dateRange(start, end)
@@ -28,6 +30,7 @@ exports.home_get = function(req, res, next) {
 
     let resultList = {
         date : [],
+        calorie_avg : [],
         exercise : [],
         nutrition : [],
         sleep : [],
@@ -35,12 +38,12 @@ exports.home_get = function(req, res, next) {
     }
 
     const dateRange = () => {
-        let start
-        let end
-        if (!req.params.start) {
+        let start = req.query.start
+        let end = req.query.end
+        if (!req.query.start) {
             start = moment().format('YYYY-MM-DD')
         }
-        if (!req.params.end) {
+        if (!req.query.end) {
             end = moment()
             end.add(1, 'days')
             end.format('YYYY-MM-DD')
@@ -53,7 +56,47 @@ exports.home_get = function(req, res, next) {
             end
         }
     }
+
+    const calorieAvg = async days => {
+
+        try {
+            end = moment();
+            await end.add( 1, 'days');
+            
+            start = moment();
+            await start.subtract(days, 'days');
     
+            const calorieList = [];
+            const filter = {
+                userID: req.user.id,
+                date_of_entry: {
+                    $gt: start,
+                    $lt: end
+                }
+            };
+            const nutrition = await Nutrition.find(filter).exec()
+            nutrition.forEach((item) => {
+                calorieList.push(item.calories)
+            });
+
+            const reducer = (accumulator, currentValue) => accumulator + currentValue;
+            const sum = calorieList.reduce(reducer);
+            const divisor = calorieList.length
+            if (divisor>0) {
+                avg = sum/divisor;
+                return Math.round(avg)
+            } else {
+                return 0
+            }
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+
+
+
     async function fetchData(resultList) {
 
         resultList.date = dateRange();
@@ -90,6 +133,7 @@ exports.home_get = function(req, res, next) {
             }
             resultList.nutrition.push(entry);
         });
+        
         sleep.forEach((item) => {
             const entry = {
                 hours: item.hours,
@@ -112,6 +156,7 @@ exports.home_get = function(req, res, next) {
     async function container() {
         try {
             await fetchData(resultList);
+            resultList.calorie_avg.push(await calorieAvg(7))
             //res.json(resultList)
             res.render('home', { title: 'Health & Fitness', data: resultList, date: moment(resultList.date.start).format('MMMM Do YYYY')});
         } catch (err) {
@@ -119,6 +164,8 @@ exports.home_get = function(req, res, next) {
         };       
     };
     
-    container()
+
+    
+    container();
 
 };

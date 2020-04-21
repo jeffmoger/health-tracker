@@ -1,7 +1,7 @@
 extends main
 
 block content
-  h1= title
+  h1(class='home')=title
   div(class='home-date')
     p=date
   if data.exercise.length > 0
@@ -18,9 +18,11 @@ block content
       h3 Nutrition
         |  
         a(href='/view/nutrition/create') +
+      p(class='calorie_avg')=data.calorie_avg
+        |  average calories consumed per day over past 7 days.
       each item in data.nutrition
         p=item.calories
-          |  calories consumed
+          |  calories consumed today
         ul
           li=item.protein
             | g protein
