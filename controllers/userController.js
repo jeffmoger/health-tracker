@@ -72,7 +72,7 @@ exports.user_detail = function(req, res, next) {
 
 //LOGIN_GET: Login form on GET
 exports.login_get = function(req, res, next) {
-  res.render('login_form', { title: 'Login', method: 'GET'});
+  res.render('login_form', { title: 'Login', method: 'GET', page: 'login'});
 };
 
 

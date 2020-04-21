@@ -15,7 +15,8 @@ html(lang='en')
         div(class='col-sm-5')
           div(class='nav')
             block nav
-              include nav.pug
+              if page !== 'login'
+                include nav.pug
         div(class='col-sm-1')
       div(class='row')
         div(class='col-sm-1')
@@ -26,12 +27,13 @@ html(lang='en')
       div(class='row')
         div(class='col-sm-1')
         div(class='col-sm-5')
-          div(class='footer')
-            a(href='/view/exercise') exercise  
-            | | 
-            a(href='/view/nutrition') nutrition  
-            | | 
-            a(href='/view/sleep') sleep  
-            | | 
-            a(href='/view/weight') weight
-          div(class='col-sm-1')
+          if page !== 'login'
+            div(class='footer')
+              a(href='/view/exercise') exercise  
+              | | 
+              a(href='/view/nutrition') nutrition  
+              | | 
+              a(href='/view/sleep') sleep  
+              | | 
+              a(href='/view/weight') weight
+            div(class='col-sm-1')
