@@ -28,10 +28,12 @@ exports.home_get = function(req, res, next) {
         return date.myarray
     }
 
-    const returnAvg = (arr) => {
+    const returnAvg = (arr,divisor) => {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const sum = arr.reduce(reducer);
-        const divisor = arr.length;
+        if (!divisor) {
+            divisor = arr.length;
+        }
 
         if (divisor>0) {
             avg = sum/divisor;
@@ -110,7 +112,7 @@ exports.home_get = function(req, res, next) {
             });
 
             resultList.stats.cal_in_avg = returnAvg(cal_in);
-            resultList.stats.cal_burn_avg = returnAvg(cal_burn);
+            resultList.stats.cal_burn_avg = returnAvg(cal_burn,7);
             resultList.stats.sleep_avg = returnAvg(sleep_list);
             resultList.stats.weight_avg = returnAvg(weight_list);
 
