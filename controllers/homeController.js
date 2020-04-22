@@ -38,7 +38,6 @@ exports.home_get = function(req, res, next) {
         if (divisor>0) {
             avg = sum/divisor;
             avg1 = Math.round(avg*10)
-            console.log('returnAvg: ' +avg1/10)
             return avg1/10
         } else {
             return 0
@@ -112,11 +111,9 @@ exports.home_get = function(req, res, next) {
             });
 
             resultList.stats.cal_in_avg = returnAvg(cal_in);
-            resultList.stats.cal_burn_avg = returnAvg(cal_burn,7);
+            resultList.stats.cal_burn_avg = returnAvg(cal_burn,days);
             resultList.stats.sleep_avg = returnAvg(sleep_list);
             resultList.stats.weight_avg = returnAvg(weight_list);
-
-        
 
         } catch (err) {
             console.log(err)
