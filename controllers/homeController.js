@@ -28,9 +28,24 @@ exports.home_get = function(req, res, next) {
         return date.myarray
     }
 
+    const returnAvg = (arr) => {
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        const sum = arr.reduce(reducer);
+        const divisor = arr.length;
+
+        if (divisor>0) {
+            avg = sum/divisor;
+            avg1 = Math.round(avg*10)
+            console.log('returnAvg: ' +avg1/10)
+            return avg1/10
+        } else {
+            return 0
+        }
+    }
+
     let resultList = {
         date : [],
-        calorie_avg : [],
+        stats: {},
         exercise : [],
         nutrition : [],
         sleep : [],
@@ -57,7 +72,7 @@ exports.home_get = function(req, res, next) {
         }
     }
 
-    const calorieAvg = async days => {
+    const stats = async days => {
 
         try {
             end = moment();
@@ -66,7 +81,10 @@ exports.home_get = function(req, res, next) {
             start = moment();
             await start.subtract(days, 'days');
     
-            const calorieList = [];
+            const cal_in = [];
+            const cal_burn = [];
+            const sleep_list = [];
+            const weight_list =[];
             const filter = {
                 userID: req.user.id,
                 date_of_entry: {
@@ -76,18 +94,27 @@ exports.home_get = function(req, res, next) {
             };
             const nutrition = await Nutrition.find(filter).exec()
             nutrition.forEach((item) => {
-                calorieList.push(item.calories)
+                cal_in.push(item.calories)
+            });
+            const exercise = await Exercise.find(filter).exec()
+            exercise.forEach((item) => {
+                cal_burn.push(item.calorie_burn)
+            });
+            const sleep = await Sleep.find(filter).exec()
+            sleep.forEach((item) => {
+                sleep_list.push(item.hours)
+            });
+            const weight = await Weight.find(filter).exec()
+            weight.forEach((item) => {
+                weight_list.push(item.weight)
             });
 
-            const reducer = (accumulator, currentValue) => accumulator + currentValue;
-            const sum = calorieList.reduce(reducer);
-            const divisor = calorieList.length
-            if (divisor>0) {
-                avg = sum/divisor;
-                return Math.round(avg)
-            } else {
-                return 0
-            }
+            resultList.stats.cal_in_avg = returnAvg(cal_in);
+            resultList.stats.cal_burn_avg = returnAvg(cal_burn);
+            resultList.stats.sleep_avg = returnAvg(sleep_list);
+            resultList.stats.weight_avg = returnAvg(weight_list);
+
+        
 
         } catch (err) {
             console.log(err)
@@ -156,7 +183,7 @@ exports.home_get = function(req, res, next) {
     async function container() {
         try {
             await fetchData(resultList);
-            resultList.calorie_avg.push(await calorieAvg(7))
+            await stats(7);
             //res.json(resultList)
             res.render('home', { title: 'Health & Fitness', data: resultList, date: moment(resultList.date.start).format('MMMM Do YYYY')});
         } catch (err) {

@@ -74,5 +74,6 @@ div.content div.edit {
  div.home-date p {
    font-size: 90%;
    color: #666666;
+   padding-left: 0px;
  }
 
