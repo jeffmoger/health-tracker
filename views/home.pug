@@ -4,50 +4,55 @@ block content
   h1(class='home')=title
   div(class='home-date')
     p=date
+  div(class='home-stats')
     ul
-      li=data.stats.cal_in_avg
+      li
+        strong=Math.round(data.stats.nutrition.cal_in.count)
         |  calories per day
-      li=data.stats.cal_burn_avg
+      li
+        strong=Math.round(data.stats.exercise.cal_burn.count)
         |  calories burned through exercise
-      li=data.stats.sleep_avg
+      li
+        strong=data.stats.sleep.sleep_avg.count
         |  hours of sleep
-      li=data.stats.weight_avg
-        | kg
-  if data.exercise.length > 0
-      h3 Exercise
-        |  
-        a(href='/view/exercise/create') +
-      each item in data.exercise
-        p=item.exercise_type
-          |  (#{item.minutes} minutes)
-        ul
-          li=item.calorie_burn
-            |  calories burned
-  if data.nutrition.length > 0
-      h3 Nutrition
-        |  
-        a(href='/view/nutrition/create') +
-      each item in data.nutrition
-        p=item.calories
-          |  calories consumed today
-        ul
-          li=item.protein
-            | g protein
-          li=item.carbs
-            | g carbs
-          li=item.fat
-            | g fat
-  if data.sleep.length > 0
-      h3 Sleep
-        |  
-        a(href='/view/sleep/create') +
-      each item in data.sleep
-        p=item.hours
-          |  hours
-  if data.weight.length > 0
-      h3 Weight
-        |  
-        a(href='/view/weight/create') +
-      each item in data.weight
-        p=item.weight
-          |  #{item.unit}
+      li
+        strong=data.stats.weight.weight_avg.count
+        |  kg
+  if data.segments.exercise.length > 0
+    h3 Exercise
+      |  
+      a(href='/view/exercise/create') +
+    each item in data.segments.exercise
+      p=item.exercise_type
+        |  (#{item.minutes} minutes)
+      ul
+        li=item.calorie_burn
+          |  calories burned
+  if data.segments.nutrition.length > 0
+    h3 Nutrition
+      |  
+      a(href='/view/nutrition/create') +
+    each item in data.segments.nutrition
+      p=item.calories
+        |  calories consumed today
+      ul
+        li=item.protein
+          | g protein
+        li=item.carbs
+          | g carbs
+        li=item.fat
+          | g fat
+  if data.segments.sleep.length > 0
+    h3 Sleep
+      |  
+      a(href='/view/sleep/create') +
+    each item in data.segments.sleep
+      p=item.hours
+        |  hours
+  if data.segments.weight.length > 0
+    h3 Weight
+      |  
+      a(href='/view/weight/create') +
+    each item in data.segments.weight
+      p=item.weight
+        |  #{item.unit}

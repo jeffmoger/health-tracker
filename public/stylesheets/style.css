@@ -1,7 +1,8 @@
 body {
-  padding: 50px;
+  padding: 15px;
   padding-top: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #101010;
 }
 div.content {
   padding: 0px 20px;
@@ -9,9 +10,15 @@ div.content {
 
 div.content h1 {
   font-size: 220%;
+  color: #999999
+}
+div.content h3 {
+  font-size: 160%;
+  color: #888888
 }
 div.content p {
   padding-left: 20px;
+  color: #888888
 }
 
 a {
@@ -19,6 +26,7 @@ a {
 }
 li {
   list-style-type: circle;
+  color: #888888
 }
 div.footer {
   margin: auto;
@@ -26,10 +34,10 @@ div.footer {
   width: 100%;
   padding: 5px;
   text-align: center;
-  color: rgb(230, 229, 229);
+  color: #333333;
   font-size: 90%;
-  border-top: 1px dotted rgb(230, 229, 229);
-  border-bottom: 1px dotted rgb(230, 229, 229);
+  border-top: 1px dotted #333333;
+  border-bottom: 1px dotted #333333;
 
 }
 div.footer a {
@@ -42,7 +50,7 @@ div.nav {
   width: 100%;
   padding: 5px;
   text-align: right;
-  color: rgb(230, 229, 229);
+  color: #333333;
   font-size: 90%;
 }
 div.nav a {
@@ -73,7 +81,30 @@ div.content div.edit {
  }
  div.home-date p {
    font-size: 90%;
-   color: #666666;
+   color: #976907;
    padding-left: 0px;
  }
+div.home-stats {
+  color: #666666;
+}
+div.home-stats strong {
+  color: #999999;
+}
+div.home-stats li {
+  padding-left: 0px;
+}
+div.home-stats li {
+  list-style-type: none;
+  line-height: 180%;
+}
 
+input.form-control,
+select.form-control {
+  background-color: #111111;
+  border-color: #222222;
+  color: #999999;
+}
+
+div.form-group label {
+  color: #777777;
+}

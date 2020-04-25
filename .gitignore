@@ -3,3 +3,6 @@ node_modules
 moment-timezone.js
 client_id.json
 My Project-4a239b01cc77.json
+functions.js
+functions.json
+controllers/stats.js

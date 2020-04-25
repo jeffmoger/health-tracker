@@ -1,16 +1,28 @@
 const models = require('../models/viewModel');
 const moment = require('moment');
-
 const Exercise = models.exercise,
       Nutrition = models.nutrition,
       Sleep = models.sleep,
       Weight = models.weight;
 
 
+//Return appropriate model schema
+const getDB = segment => {
+    if (segment === 'exercise') {
+        return Exercise;
+    } else if (segment === 'nutrition') {
+        return Nutrition;
+    } else if (segment === 'sleep') {
+        return Sleep;
+    } else if (segment === 'weight') {
+        return Weight;
+    }
+}
 
 
 // Home Controller on GET.
 exports.home_get = function(req, res, next) {
+
 
     //Calculate number of days between two dates, and generate an array of date
     const dateArray = (start, end) => {
@@ -34,7 +46,6 @@ exports.home_get = function(req, res, next) {
         if (!divisor) {
             divisor = arr.length;
         }
-
         if (divisor>0) {
             avg = sum/divisor;
             avg1 = Math.round(avg*10)
@@ -44,15 +55,6 @@ exports.home_get = function(req, res, next) {
         }
     }
 
-    let resultList = {
-        date : [],
-        stats: {},
-        exercise : [],
-        nutrition : [],
-        sleep : [],
-        weight : []
-    }
-
     const dateRange = () => {
         let start = req.query.start
         let end = req.query.end
@@ -60,7 +62,7 @@ exports.home_get = function(req, res, next) {
             start = moment().format('YYYY-MM-DD')
         }
         if (!req.query.end) {
-            end = moment()
+            end = moment().startOf('day')
             end.add(1, 'days')
             end.format('YYYY-MM-DD')
         }
@@ -73,47 +75,49 @@ exports.home_get = function(req, res, next) {
         }
     }
 
-    const stats = async days => {
-
+    const generateStats = async (stats) => {
         try {
-            end = moment();
-            await end.add( 1, 'days');
+            const dateFilter = (days) => {
+                end = moment();
+                end.add( 1, 'days');
+                start = moment();
+                start.subtract(days, 'days');
+                return {
+                    userID: req.user.id,
+                    date_of_entry: {
+                        $gt: start,
+                        $lt: end
+                    }
+                };
+            }
             
-            start = moment();
-            await start.subtract(days, 'days');
-    
-            const cal_in = [];
-            const cal_burn = [];
-            const sleep_list = [];
-            const weight_list =[];
-            const filter = {
-                userID: req.user.id,
-                date_of_entry: {
-                    $gt: start,
-                    $lt: end
+            for (let segment in stats) {
+                for (let seg in stats[segment]) {
+                    if (stats[segment][seg].type === 'average') {
+                        let arr = [];
+                        let daysNum = stats[segment][seg].days
+                        let divisor
+                        if (stats[segment][seg].divide_by_days === true) {
+                            divisor = daysNum
+                        };
+                        let documents = await getDB(segment).find(dateFilter(daysNum)).exec()
+                        documents.forEach((item) => {
+                            entry = returnFields(segment, item)
+                            if (segment === 'exercise') {
+                                arr.push(item.calorie_burn);
+                            } else if (segment === 'nutrition') {
+                                arr.push(item.calories);
+                            } else if (segment === 'sleep') {
+                                arr.push(item.hours);
+                            } else if (segment === 'weight') {
+                                arr.push(item.weight);
+                            }
+                        });
+                        stats[segment][seg].count = returnAvg(arr, divisor);
+                    }
                 }
-            };
-            const nutrition = await Nutrition.find(filter).exec()
-            nutrition.forEach((item) => {
-                cal_in.push(item.calories)
-            });
-            const exercise = await Exercise.find(filter).exec()
-            exercise.forEach((item) => {
-                cal_burn.push(item.calorie_burn)
-            });
-            const sleep = await Sleep.find(filter).exec()
-            sleep.forEach((item) => {
-                sleep_list.push(item.hours)
-            });
-            const weight = await Weight.find(filter).exec()
-            weight.forEach((item) => {
-                weight_list.push(item.weight)
-            });
-
-            resultList.stats.cal_in_avg = returnAvg(cal_in);
-            resultList.stats.cal_burn_avg = returnAvg(cal_burn,days);
-            resultList.stats.sleep_avg = returnAvg(sleep_list);
-            resultList.stats.weight_avg = returnAvg(weight_list);
+            }
+            return stats
 
         } catch (err) {
             console.log(err)
@@ -121,77 +125,137 @@ exports.home_get = function(req, res, next) {
     }
     
 
-
-
-    async function fetchData(resultList) {
-
-        resultList.date = dateRange();
-        const filter = {
-            userID: req.user.id,
-            date_of_entry: {
-                $gt: resultList.date.start,
-                $lt: resultList.date.end
-            }
+    const returnFields = (segment, item) => {
+        switch(segment) {
+            case 'exercise':
+                return {
+                    exercise_type: item.exercise_type,
+                    minutes: item.minutes,
+                    calorie_burn: item.calorie_burn,
+                    date_formatted: item.date_formatted,
+                    date_of_entry: item.date_of_entry
+                };
+            case 'nutrition':
+                return {
+                    calories: item.calories,
+                    protein: item.protein,
+                    carbs: item.carbs,
+                    fat: item.fat,
+                    date_formatted: item.date_formatted,
+                    date_of_entry: item.date_of_entry
+                };
+            case 'sleep':
+                return {
+                    hours: item.hours,
+                    date_formatted: item.date_formatted,
+                    date_of_entry: item.date_of_entry
+                };
+            case 'weight':
+                return {
+                    weight: item.weight,
+                    unit: item.unit,
+                    date_formatted: item.date_formatted,
+                    date_of_entry: item.date_of_entry
+                }
         }
-        const exercise = await Exercise.find(filter).exec()
-        const nutrition = await Nutrition.find(filter).exec()
-        const sleep = await Sleep.find(filter).exec()
-        const weight = await Weight.find(filter).exec()
-    
-        exercise.forEach((item) => {
-            const entry = {
-                exercise_type: item.exercise_type,
-                minutes: item.minutes,
-                calorie_burn: item.calorie_burn,
-                date_formatted: item.date_formatted,
-                date_of_entry: item.date_of_entry
+    }
+
+
+    const fetchSegments = async (startDate, endDate, segments) => {
+        try {
+            const filter = {
+                userID: req.user.id,
+                date_of_entry: {
+                    $gt: startDate,
+                    $lt: endDate
+                }
             }
-            resultList.exercise.push(entry);
-        });
-        nutrition.forEach((item) => {
-            const entry = {
-                calories: item.calories,
-                protein: item.protein,
-                carbs: item.carbs,
-                fat: item.fat,
-                date_formatted: item.date_formatted,
-                date_of_entry: item.date_of_entry
+            for (segment in segments) {
+                let documents = await getDB(segment).find(filter).exec()
+                documents.forEach((item) => {
+                    entry = returnFields(segment, item)
+                    segments[segment].push(entry);
+                });
             }
-            resultList.nutrition.push(entry);
-        });
-        
-        sleep.forEach((item) => {
-            const entry = {
-                hours: item.hours,
-                date_formatted: item.date_formatted,
-                date_of_entry: item.date_of_entry
-            }
-            resultList.sleep.push(entry);
-        });
-        weight.forEach((item) => {
-            const entry = {
-                weight: item.weight,
-                unit: item.unit,
-                date_formatted: item.date_formatted,
-                date_of_entry: item.date_of_entry
-            }
-            resultList.weight.push(entry);
-        })
+            return segments;
+
+        } catch(err) {
+            console.log(err)
+        }
     }
     
     async function container() {
         try {
-            await fetchData(resultList);
-            await stats(7);
-            //res.json(resultList)
-            res.render('home', { title: 'Health & Fitness', data: resultList, date: moment(resultList.date.start).format('MMMM Do YYYY')});
+            //get container
+            const results = {
+                date : {},
+                stats: {
+                    exercise: {
+                        cal_burn: {
+                            type: "average",
+                            days: 7,
+                            divide_by_days: true,
+                            description: "Average calories burned",
+                            count:0
+                        }
+                    },
+                    nutrition: { 
+                        cal_in: {
+                            type: "average",
+                            days: 7,
+                            divide_by_days: false,
+                            description: "Average calories consumed",
+                            count:0
+                        }
+                    },
+                    sleep: { 
+                        sleep_avg: {
+                            type: "average", 
+                            days: 4,
+                            divide_by_days: true, 
+                            description: "Daily sleep average",
+                            count:0
+                        }
+                    },
+                    weight: { 
+                        weight_avg: {
+                            type: "average", 
+                            days: 3, 
+                            divide_by_days: false, 
+                            description: "Weight",
+                            count:0
+                        }
+                    }
+                },
+                segments: {
+                    exercise : [],
+                    nutrition : [],
+                    sleep : [],
+                    weight : []
+                }
+            }
+            
+            //get dates
+            results.date = dateRange();
+            //get data
+            
+            await fetchSegments(
+                results.date.start,
+                results.date.end,
+                results.segments
+            );
+            
+            //get stats for weekly averages
+            await generateStats(results.stats);
+            
+            //res.json(results)
+            
+            res.render('home', { title: 'Health & Fitness', data: results, date: moment(results.date.start).format('MMMM Do YYYY')});
         } catch (err) {
             console.log(err)
         };       
     };
-    
-
-    
+       
     container();
 
 };
