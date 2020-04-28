@@ -47,6 +47,7 @@ const getDB = section => {
     }
 }
 
+
 // Display list
 exports.view_list = function(req, res, next) {
    

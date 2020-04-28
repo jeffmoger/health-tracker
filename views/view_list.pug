@@ -10,7 +10,7 @@ block content
         li
           if section === 'exercise'
             a(href=item.url) #{item.date_formatted} 
-            | #{item.exercise_type}: #{item.minutes} mins
+            | #{item.exercise_type}: #{item.minutes} mins - #{item.calorie_burn}
           if section === 'nutrition'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.calories} calories

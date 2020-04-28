@@ -7,6 +7,8 @@ const user_controller = require('../controllers/userController'),
 const { validate } = require('../controllers/validation.js');
 const { validationRules } = require('../controllers/validationRules.js');
 
+
+
 router.use('/:segment*', function(req, res, next) {
       res.locals.segment = req.body.segment;
       res.locals.interface = 'view'
@@ -36,13 +38,12 @@ router.get('/users/:id/settings', verify, user_controller.settings_get);
 ____________________________________*/
 
 
-
-router.get('/:segment/:id/edit', verify, view_controller.edit_get);
-router.post('/:segment/:id/edit', verify, validationRules(), validate, view_controller.edit_post);
-
 router.get('/:segment/create', verify, view_controller.create_get);
 
 router.post('/:segment/create', verify, validationRules(), validate, view_controller.create_post);
+
+router.get('/:segment/:id/edit', verify, view_controller.edit_get);
+router.post('/:segment/:id/edit', verify, validationRules(), validate, view_controller.edit_post);
 
 router.get('/:segment/:id/delete', verify, view_controller.view_delete_get);
 router.post('/:segment/:id/delete', verify, view_controller.view_delete_post);

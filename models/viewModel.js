@@ -55,8 +55,8 @@ const nutritionSchema = BaseSchema(
 const sleepSchema = BaseSchema(
   {
     hours: {type: Number, required: true},
-    startTime: {type: String},
-    endTime: {type: String}
+    startTime: {type: Date},
+    endTime: {type: Date}
     },'sleep'
 );
 
