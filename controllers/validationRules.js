@@ -10,6 +10,7 @@ const validationRules = function() {
         body('carbs').isNumeric(),
         body('fat').isNumeric(),
         body('weight').isNumeric(),
+        body('mood').isNumeric(),
         body('notes').optional({ checkFalsy: true }).escape()
     ]
 }

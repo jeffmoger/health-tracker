@@ -3,7 +3,8 @@ const moment = require('moment');
 const Exercise = models.exercise,
       Nutrition = models.nutrition,
       Sleep = models.sleep,
-      Weight = models.weight;
+      Weight = models.weight,
+      Mood = models.mood;
 
 
 //Return appropriate model schema
@@ -16,6 +17,8 @@ const getDB = segment => {
         return Sleep;
     } else if (segment === 'weight') {
         return Weight;
+    } else if (segment === 'mood') {
+        return Mood;
     }
 }
 
@@ -35,7 +38,7 @@ const dateArray = (start, end) => {
     return date.myarray
 }
 
-const returnAvg = (arr,divisor) => {
+const returnAvg = (arr, divisor) => {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     const sum = arr.reduce(reducer);
     if (!divisor) {
@@ -82,6 +85,12 @@ const returnFields = (segment, item) => {
             return {
                 weight: item.weight,
                 unit: item.unit,
+                date_formatted: item.date_formatted,
+                date_of_entry: item.date_of_entry
+            };
+        case 'mood':
+            return {
+                mood: item.mood,
                 date_formatted: item.date_formatted,
                 date_of_entry: item.date_of_entry
             }
@@ -158,6 +167,7 @@ const generateStats = async (stats, reqUserID) => {
         for (let segment in stats) {
             for (let seg in stats[segment]) {
                 if (stats[segment][seg].type === 'average') {
+                    
                     let arr = [];
                     let daysNum = stats[segment][seg].days
                     let divisor
@@ -175,9 +185,14 @@ const generateStats = async (stats, reqUserID) => {
                             arr.push(item.hours);
                         } else if (segment === 'weight') {
                             arr.push(item.weight);
+                        } else if (segment === 'mood') {
+                            arr.push(item.mood);
                         }
                     });
-                    stats[segment][seg].count = returnAvg(arr, divisor);
+                    if (arr.length) {
+                        stats[segment][seg].count = returnAvg(arr, divisor);
+                    }
+                    
                 }
             }
         }
@@ -204,7 +219,7 @@ exports.home_get = function(req, res, next) {
                 cal_burn: {
                     type: "average",
                     days: 7,
-                    divide_by_days: true,
+                    divide_by_days: false,
                     description: "Average calories burned",
                     count:0
                 }
@@ -230,9 +245,18 @@ exports.home_get = function(req, res, next) {
             weight: { 
                 weight_avg: {
                     type: "average", 
-                    days: 3, 
+                    days: 5, 
                     divide_by_days: false, 
                     description: "Weight",
+                    count:0
+                }
+            },
+            mood: { 
+                mood_avg: {
+                    type: "average", 
+                    days: 7, 
+                    divide_by_days: false, 
+                    description: "Mood",
                     count:0
                 }
             }
@@ -241,7 +265,8 @@ exports.home_get = function(req, res, next) {
             exercise : [],
             nutrition : [],
             sleep : [],
-            weight : []
+            weight : [],
+            mood : []
         }
     }
 
@@ -255,6 +280,7 @@ exports.home_get = function(req, res, next) {
                 results.segments,
                 reqUserID
             );
+            
             results.stats = await generateStats(results.stats, reqUserID);
             
             //res.json(results)
@@ -291,7 +317,8 @@ exports.view_stats = function(req, res, next) {
                     exercise : [],
                     nutrition : [],
                     sleep : [],
-                    weight : []
+                    weight : [],
+                    mood : []
                 }
             }
             results.date = dateRange(reqStart, reqEnd, 15);
@@ -366,6 +393,13 @@ exports.view_stats = function(req, res, next) {
                     };
                     results.stats[segment].weight = weight;
                     results.stats[segment].date_of_entry = date_of_entry;
+                } else if (segment === 'mood') {
+                    let mood = [];
+                    let date_of_entry = [];
+                    for (let item in segments[segment]) {
+                        mood.push(segments[segment][item].mood);
+                        date_of_entry.push(segments[segment][item].date_of_entry);
+                    }
                 }
             }
 

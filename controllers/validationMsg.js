@@ -22,6 +22,10 @@ allFields = {
         "weight":           "Please enter numeric value for weight",
         "unit":             "units",
         "notes":            "Notes are optional"
+    },
+    "mood": {
+        "mood":             "Please select a value for mood",
+        "notes":            "Notes are optional"
     }
 }
 

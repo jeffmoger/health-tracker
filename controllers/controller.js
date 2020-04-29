@@ -5,6 +5,7 @@ const Exercise = models.exercise,
       Nutrition = models.nutrition,
       Sleep = models.sleep,
       Weight = models.weight;
+      Mood = models.mood;
 
 
 // determine if API or View
@@ -43,7 +44,9 @@ const getDB = section => {
         return Sleep;
     } else if (section === 'weight') {
         return Weight;
-    }
+    } else if (section === 'mood') {
+        return Mood;
+    } 
 }
 
 // Functions for parsing sleep time
@@ -158,11 +161,14 @@ exports.create_post = function(req, res, next) {
             item.date_of_entry = dateWithTime(item.date_of_entry);
         }
 
-        let sleepTime = parseTime(item.endTime, item.startTime, item.date_of_entry);
-        item.hours = getHours(sleepTime[0], sleepTime[1]);
-        item.minutes = getMinutes(sleepTime[0], sleepTime[1]);
-        item.endTime = sleepTime[0];
-        item.startTime = sleepTime[1];
+        if (item.endTime) {
+            let sleepTime = parseTime(item.endTime, item.startTime, item.date_of_entry);
+            item.hours = getHours(sleepTime[0], sleepTime[1]);
+            item.minutes = getMinutes(sleepTime[0], sleepTime[1]);
+            item.endTime = sleepTime[0];
+            item.startTime = sleepTime[1];
+        }
+
 
 
 
@@ -224,11 +230,13 @@ exports.edit_post = function(req, res, next) {
     
     console.log(req.body.date_of_entry);
     
-    let sleepTime = parseTime(req.body.endTime, req.body.startTime, req.body.date_of_entry);
-    req.body.hours = getHours(sleepTime[0], sleepTime[1]);
-    req.body.minutes = getMinutes(sleepTime[0], sleepTime[1]);
-    req.body.endTime = sleepTime[0];
-    req.body.startTime = sleepTime[1];
+    if (req.body.endTime) {
+        let sleepTime = parseTime(req.body.endTime, req.body.startTime, req.body.date_of_entry);
+        req.body.hours = getHours(sleepTime[0], sleepTime[1]);
+        req.body.minutes = getMinutes(sleepTime[0], sleepTime[1]);
+        req.body.endTime = sleepTime[0];
+        req.body.startTime = sleepTime[1];
+    }
 
 
     const db = getDB(segment);

@@ -14,6 +14,8 @@ block content
       li #{item.date_formatted}, #{item.hours}
     if section === 'weight'
       li #{item.date_formatted}, #{item.weight}#{item.unit}
+    if section === 'mood'
+      li #{item.date_formatted}, #{item.mood}
 
   div(style='margin-left:20px;margin-top:20px')
   hr

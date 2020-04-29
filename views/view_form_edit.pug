@@ -50,6 +50,10 @@ block content
               else
                 option#unit.form-control(value='kg') kg
                 option#unit.form-control(value='lb' selected) lb
+      if section === 'mood'
+        div.form-group
+          label(for='mood') Mood:
+          input#mood.form-control(type='range' name='mood' value=item.mood min="1" max="10")
    
       div.form-group
         label(for='date_of_entry') Date:

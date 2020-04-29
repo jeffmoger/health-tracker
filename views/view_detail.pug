@@ -20,6 +20,9 @@ block content
     if section === 'weight'
       li #{item.date_formatted}  
       li #{item.weight}#{item.unit}
+    if section === 'mood'
+      li #{item.date_formatted}  
+      li #{item.mood}
     if item.notes
       li #{item.notes}
   div(class='edit')

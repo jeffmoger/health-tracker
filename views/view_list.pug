@@ -20,5 +20,8 @@ block content
           if section === 'weight'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.weight}#{item.unit}
+          if section === 'mood'
+            a(href=item.url) #{item.date_formatted} 
+            | - #{item.mood}
   else
     li No data available. (2)

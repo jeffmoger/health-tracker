@@ -68,9 +68,16 @@ const weightSchema = BaseSchema(
     },'weight'
 );
 
+const moodSchema = BaseSchema(
+  {
+    mood: {type: Number, required: true},
+    },'mood'
+);
+
 
 //Export models
 exports.exercise = mongoose.model('viewExercise', exerciseSchema, 'exercise');
 exports.nutrition = mongoose.model('viewNutrition', nutritionSchema, 'nutrition');
 exports.sleep = mongoose.model('viewSleep', sleepSchema, 'sleep');
 exports.weight = mongoose.model('viewWeight', weightSchema, 'weight');
+exports.mood = mongoose.model('viewMood', moodSchema, 'mood');

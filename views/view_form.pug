@@ -45,8 +45,11 @@ block content
             select#unit.form-control(name='unit' required='true')
               option#unit.form-control(value='kg' selected) kg
               option#unit.form-control(value='lb') lb
-   
-   
+      if section === 'mood'
+        div.form-group
+          label(for='mood') Mood:
+          input#mood.form-control(type='range' name='mood' value="5" min="1" max="10")
+      
       div.form-group
         label(for='date_of_entry') Date:
         input#date_of_entry.form-control(type='date' name='date_of_entry' value=todayDate)
