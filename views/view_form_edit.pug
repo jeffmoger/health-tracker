@@ -29,10 +29,13 @@ block content
           label(for='fat') Fat:
           input#fat.form-control(type='text' placeholder='60' name='fat' required='true' value=item.fat)
       
-      if section === 'sleep' 
+      if section === 'sleep'
         div.form-group
-          label(for='hours') Hours:
-          input#sleep.form-control(type='text' placeholder='8' name='hours' required='true' value=item.hours)
+          label(for='endTime') Wake Time:
+          input#endTime.form-control(type="time" name="endTime" value=endTime)
+        div.form-group
+          label(for='startTime') Bed Time:
+          input#startTime.form-control(type="time" name="startTime" value=startTime)
       
       if section === 'weight'
         div.form-group
@@ -50,8 +53,7 @@ block content
    
       div.form-group
         label(for='date_of_entry') Date:
-        input#date_of_entry.form-control(type='hidden' name='date_of_entry_old' value=item.date_of_entry)
-        input#date_of_entry.form-control(type='date' name='date_of_entry' value=item.date_of_entry)
+        input#date_of_entry.form-control(type='date' name='date_of_entry' value=date_of_entry)
       div.form-group
         label(for='notes') Notes:
         input#notes.form-control(type='textarea' name='notes' value=item.notes)

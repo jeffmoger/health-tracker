@@ -10,7 +10,7 @@ block content
           input#exercise_type.form-control(type='text' placeholder='' name='exercise_type' required='true')
         div.form-group
           label(for='minutes') Minutes:
-          input#minutes.form-control(type='text' placeholder='' name='minutes' required='true')
+          input#minutes.form-control(type='text' placeholder='' name='minutes')
         div.form-group
           label(for='calorie_burn') Calorie Burn:
           input#calorie_burn.form-control(type='text' placeholder='' name='calorie_burn' required='true')
@@ -31,9 +31,11 @@ block content
       
       if section === 'sleep' 
         div.form-group
-          label(for='hours') Hours:
-          input#sleep.form-control(type='text' placeholder='' name='hours' required='true')
-      
+          label(for='endTime') Wake Time:
+          input#endTime.form-control(type="time" name="endTime" value='07:00:00')
+        div.form-group
+          label(for='startTime') Bed Time:
+          input#startTime.form-control(type="time" name="startTime" value='22:00:00')
       if section === 'weight'
         div.form-group
           label(for='weight') Weight:
@@ -47,7 +49,7 @@ block content
    
       div.form-group
         label(for='date_of_entry') Date:
-        input#date_of_entry.form-control(type='date' name='date_of_entry')
+        input#date_of_entry.form-control(type='date' name='date_of_entry' value=todayDate)
       div.form-group
         label(for='notes') Notes:
         input#notes.form-control(type='textarea' name='notes')

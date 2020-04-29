@@ -9,7 +9,6 @@ const validationRules = function() {
         body('protein').isNumeric(),
         body('carbs').isNumeric(),
         body('fat').isNumeric(),
-        body('hours').isNumeric(),
         body('weight').isNumeric(),
         body('notes').optional({ checkFalsy: true }).escape()
     ]

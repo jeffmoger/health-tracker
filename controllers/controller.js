@@ -1,10 +1,10 @@
 const models = require('../models/viewModel');
+const moment = require('moment');
 
 const Exercise = models.exercise,
       Nutrition = models.nutrition,
       Sleep = models.sleep,
       Weight = models.weight;
-
 
 
 // determine if API or View
@@ -27,7 +27,6 @@ const dateWithTime = date => {
 }
 
 
-
 //Capitalize section for titles
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -45,6 +44,36 @@ const getDB = section => {
     } else if (section === 'weight') {
         return Weight;
     }
+}
+
+// Functions for parsing sleep time
+function splitTime(time) {
+    let t = time.split(":");
+    return t
+}
+function parseTime(endTime, startTime, date) {
+    const newEndTime = moment(date).hour(splitTime(endTime)[0]).minutes(splitTime(endTime)[1]);
+    const newStartTime = moment(date).hour(splitTime(startTime)[0]).minutes(splitTime(startTime)[1]);
+    if ( newStartTime.isAfter(newEndTime)) {
+        newStartTime.subtract(1, 'days');               
+    }
+    return [newEndTime, newStartTime]
+}
+function getHours(endTime, startTime) {
+    let mins = Math.round(Math.abs(endTime - startTime) /1000/60);
+    let remainder = mins % 60;
+    let hours = (mins-remainder)/60;
+    return hours + Math.round(remainder/60*10)/10
+}
+
+function getMinutes(endTime, startTime) {
+    return Math.round(Math.abs(endTime - startTime) /1000/60)
+}
+
+function formatMinutes(minutes){
+    let remainder = minutes % 60;
+    let hours = (minutes - remainder /60)
+    return `${hours} hrs ${remainder} mins`
 }
 
 
@@ -111,7 +140,8 @@ exports.view_delete_post = function(req, res, next) {
 // Create form on GET.
 exports.create_get = function(req, res, next) {       
     segment = req.params.segment
-    res.render('view_form', { title: `${capitalize(segment)}`, section: segment, userID: req.user.id});
+    todayDate = moment().format('YYYY-MM-DD');
+    res.render('view_form', { title: `${capitalize(segment)}`, section: segment, userID: req.user.id, todayDate: todayDate});
 };
 
 
@@ -120,13 +150,22 @@ exports.create_post = function(req, res, next) {
     const getRequest = () => {
         const segment = req.body.segment;
         const item = req.body;
-
+        
         if (!item.date_of_entry) {
             item.date_of_entry = new Date(Date.now());
         }
         if (item.date_of_entry.length === 10) {
             item.date_of_entry = dateWithTime(item.date_of_entry);
         }
+
+        let sleepTime = parseTime(item.endTime, item.startTime, item.date_of_entry);
+        item.hours = getHours(sleepTime[0], sleepTime[1]);
+        item.minutes = getMinutes(sleepTime[0], sleepTime[1]);
+        item.endTime = sleepTime[0];
+        item.startTime = sleepTime[1];
+
+
+
 
         const newItem = {
             segment,
@@ -161,7 +200,12 @@ exports.edit_get = function(req, res, next) {
     db.findById(req.params.id)
       .exec(function (err, result) {
         if (err) { return next(err); }
-        res.render('view_form_edit', { title: `${capitalize(segment)} Entry:`, item: result, section: `${segment}`});
+        startTime = moment(result.startTime).format('HH:mm');
+        endTime = moment(result.endTime).format('HH:mm');
+        date_of_entry = moment(result.date_of_entry).format('YYYY-MM-DD');
+        console.log(result)
+        
+        res.render('view_form_edit', { title: `${capitalize(segment)} Entry:`, item: result, section: `${segment}`, startTime: startTime, endTime: endTime, date_of_entry: date_of_entry });
       });
   };
 
@@ -180,6 +224,13 @@ exports.edit_post = function(req, res, next) {
     
     console.log(req.body.date_of_entry);
     
+    let sleepTime = parseTime(req.body.endTime, req.body.startTime, req.body.date_of_entry);
+    req.body.hours = getHours(sleepTime[0], sleepTime[1]);
+    req.body.minutes = getMinutes(sleepTime[0], sleepTime[1]);
+    req.body.endTime = sleepTime[0];
+    req.body.startTime = sleepTime[1];
+
+
     const db = getDB(segment);
     const saveRequest = async () => {
         try {
