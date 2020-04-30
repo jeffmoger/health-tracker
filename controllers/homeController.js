@@ -112,7 +112,6 @@ const dateRange = (start, end, duration) => {
     }
     start = moment(start).toDate();
     end = moment(end).toDate();
-
     return {
         start,
         end
@@ -152,10 +151,11 @@ const generateStats = async (stats, reqUserID) => {
     todayDate = moment().format('YYYY-MM-DD')
     try {
         const dateFilter = (days) => {
-            end = moment();
+            end = moment().startOf('day');
             end.add( 1, 'days');
-            start = moment();
-            start.subtract(days, 'days');
+            start = moment().startOf('day');
+            start.subtract(days-1, 'days');
+            //console.log(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'))
             return {
                 userID: reqUserID,
                 date_of_entry: {
@@ -166,6 +166,7 @@ const generateStats = async (stats, reqUserID) => {
         }
         
         for (let segment in stats) {
+            console.log(segment)
             for (let seg in stats[segment]) {
                 if (stats[segment][seg].type === 'average') {
                     
@@ -198,7 +199,8 @@ const generateStats = async (stats, reqUserID) => {
                     if (divisor) {
                         divisor += divAdjust
                     }
-                    console.log(segment + ' ' + divisor)
+                    //console.log(segment + ' ' + divisor)
+
                     if (arr.length) {
                         stats[segment][seg].count = returnAvg(arr, divisor);
                     }
@@ -292,6 +294,8 @@ exports.home_get = function(req, res, next) {
             );
             
             results.stats = await generateStats(results.stats, reqUserID);
+
+
             
             //res.json(results)
             
