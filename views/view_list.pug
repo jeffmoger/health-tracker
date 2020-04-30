@@ -7,21 +7,32 @@ block content
   ul
   if view_list
       each item in view_list
+          
         li
           if section === 'exercise'
             a(href=item.url) #{item.date_formatted} 
             | #{item.exercise_type}: #{item.minutes} mins - #{item.calorie_burn}
+            if item.notes
+              |  *
           if section === 'nutrition'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.calories} calories
+            if item.notes
+              |  *
           if section === 'sleep'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.hours} hours
+            if item.notes
+              |  *
           if section === 'weight'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.weight}#{item.unit}
+            if item.notes
+              |  *
           if section === 'mood'
             a(href=item.url) #{item.date_formatted} 
             | - #{item.mood}
+            if item.notes
+              |  *
   else
     li No data available. (2)
