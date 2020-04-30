@@ -237,7 +237,7 @@ exports.home_get = function(req, res, next) {
                 sleep_avg: {
                     type: "average", 
                     days: 4,
-                    divide_by_days: false, 
+                    divide_by_days: true, 
                     description: "Daily sleep average",
                     count:0
                 }
