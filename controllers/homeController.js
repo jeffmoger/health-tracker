@@ -149,6 +149,7 @@ const fetchSegments = async (startDate, endDate, segments, reqUserID) => {
 
 // Queries mongo for data on data range and calculates averages
 const generateStats = async (stats, reqUserID) => {
+    todayDate = moment().format('YYYY-MM-DD')
     try {
         const dateFilter = (days) => {
             end = moment();
@@ -172,11 +173,16 @@ const generateStats = async (stats, reqUserID) => {
                     let daysNum = stats[segment][seg].days
                     let divisor
                     if (stats[segment][seg].divide_by_days === true) {
-                        divisor = daysNum
+                        divisor = daysNum-1
                     };
+                    let divAdjust = 0
                     let documents = await getDB(segment).find(dateFilter(daysNum)).exec()
                     documents.forEach((item) => {
                         entry = returnFields(segment, item)
+                        if (todayDate === moment(item.date_of_entry).format('YYYY-MM-DD')) {
+                            divAdjust = 1
+                        }
+                        
                         if (segment === 'exercise') {
                             arr.push(item.calorie_burn);
                         } else if (segment === 'nutrition') {
@@ -189,6 +195,10 @@ const generateStats = async (stats, reqUserID) => {
                             arr.push(item.mood);
                         }
                     });
+                    if (divisor) {
+                        divisor += divAdjust
+                    }
+                    console.log(segment + ' ' + divisor)
                     if (arr.length) {
                         stats[segment][seg].count = returnAvg(arr, divisor);
                     }
